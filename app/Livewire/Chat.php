@@ -65,6 +65,28 @@ class Chat extends Component
         unset($this->messages[$index]['photo']);
     }
 
+    public function getListeners()
+    {
+        return [
+            // Public Channel
+            "echo:orders,OrderShipped" => 'notifyNewOrder',
+
+            // Private Channel
+            "echo-private:orders,OrderShipped" => 'notifyNewOrder',
+
+            //Presence Channel
+            "echo-presence:orders,OrderShipped" => 'notifyNewOrder',    // Listen
+            "echo-presence:orders,here" => 'notifyNewOrder',            // Here
+            "echo-presence:orders,joining" => 'notifyNewOrder',         // Joining
+            "echo-presence:orders,leaving" => 'notifyNewOrder',         // Leaving
+        ];
+    }
+
+    public function notifyNewOrder()
+    {
+        $this->showNewOrderNotification = true;
+    }
+
     public function render()
     {
         return view('livewire.chat');
